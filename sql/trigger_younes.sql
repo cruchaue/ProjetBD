@@ -263,11 +263,19 @@ FOR EACH ROW
 DECLARE
     nbResa integer;
     nbBornettes integer;
+	nbVeloDispo integer;
 BEGIN
     SELECT COUNT(NUM_RESERVATION) into nbResa from RESERVATION WHERE DATE_RESERVATION > (:new.DATE_RESERVATION - interval '30' minute) and DATE_RESERVATION < :new.DATE_RESERVATION + interval '30' minute AND num_station = :NEW.num_station;
     SELECT count(num_borne) into nbBornettes from Bornette where num_station=:new.NUM_STATION AND etat = 'ok';
-    -- FAIRE requete nb de bornettes dispo (+ test dans le if)
-    IF (nbresa >= nbBornettes) THEN
+	
+	select count(id_velo) into nbVeloDispo from Velo NATURAL JOIN VeloBornette NATURAL JOIN Bornette where position = 'bornette' AND num_station = :NEW.num_station;
+	
+		
+	IF(nbVeloDispo < 1) THEN 
+		    raise_application_error(-20100, 'Location impossible : Aucun vélo disponible');
+	END IF;   
+
+	IF (nbresa >= nbBornettes) THEN
     raise_application_error(-20100, 'Le nombre de reservation maximum a été atteint, crénaux indisponibles');
     END IF;   
 END;
@@ -293,6 +301,8 @@ nbResa integer;
 numB integer;
 numS integer;
 nbBornettes integer;
+nbVeloDispo integer;
+
 BEGIN
 	
 	select num_borne into numB from (select num_borne,heure_date from velobornette where id_velo = :NEW.id_velo order by heure_date desc) where rownum = 1;
@@ -302,8 +312,15 @@ BEGIN
     SELECT COUNT(NUM_RESERVATION) into nbResa from RESERVATION WHERE num_station = numS AND DATE_RESERVATION > (:new.date_heure_debut - interval '30' minute) and DATE_RESERVATION < :new.date_heure_debut + interval '30' minute;
 
     SELECT count(num_borne) into nbBornettes from Bornette where num_station=numS AND etat = 'ok';
+	
+	select count(id_velo) into nbVeloDispo from Velo NATURAL JOIN VeloBornette NATURAL JOIN Bornette where position = 'bornette' AND num_station = numS;
+	
         -- FAIRE requete nb de bornettes dispo (+ test dans le if)
-
+		
+	IF(nbVeloDispo < 1) THEN 
+		    raise_application_error(-20100, 'Location impossible : Aucun vélo disponible');
+	END IF;
+	
 	IF (nbresa >= nbBornettes) THEN
     raise_application_error(-20100, 'Location impossible : le nombre de reservation maximum a été atteint, crénaux indisponibles');
     END IF; 
@@ -315,6 +332,7 @@ END;
 INSERT INTO RESERVATION VALUES (13,99,0,sysdate);
 -- on veut louer le vélo n°245 de la station n°99 qui a déjà une réservation
 INSERT INTO LOCATION VALUES (idlocation_seq.nextval,0,245,sysdate,NULL);
+UPDATE VELO SET position = 'location' WHERE id_velo = 245;
 --- => le trigger est déclenché 
 
 
