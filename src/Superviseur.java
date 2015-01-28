@@ -105,32 +105,31 @@ public class Superviseur {
 				RequetesBDSuperviseur.afficherStation(connexion1.getConn());
 				System.out.println("\n\n Choisir option:"
 						+ "\n1: Consulter rapport station/routine"
-						+ "\n2: Consulter nombre velo endommages d'une station");
+						+ "\n2: Consulter nombre velo dans vehicule");
 
 				System.out.flush();
 				String choix2 = LectureClavier.lireChaine();
 				if (choix2.equals("1")) {
 					System.out
-					.println("Nombre velos station (saisir numero station ou '0' pour terminer): ");
+					.println("Action pour station (saisir numero station ou '0' pour terminer): ");
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
 					if (numStation != 0) {
-						RequetesBDSuperviseur.afficherActionRoutine(connexion1.getConn(),numStation);
+						RequetesBDSuperviseur.afficherActionRoutine(connexion1.getConn(), Integer.toString(numStation));
 					}
 				}
 				if(choix2.equals("2"))
 				{
 					System.out
-					.println("Nombre velos endommages (saisir numero station ou '0' pour terminer): ");
+					.println("Nombre velos dans vehicule (saisir numero station ou '0' pour terminer): ");
 					System.out.flush();
-					int numStation = LectureClavier.lireEntier(saisie);
-					if (numStation != 0) {
-						RequetesBDSuperviseur.afficherNbVeloStationEndommage(connexion1.getConn(),numStation);
+					int numVehicule = LectureClavier.lireEntier(saisie);
+					if (numVehicule != 0) {
+						RequetesBDSuperviseur.afficherNbVeloVehicule(connexion1.getConn(),numVehicule);
 					}	
 				}
 				break;
 			case 5:
-
 				System.out.flush();
 				System.out.println("Veuillez sélectionner une option:\n"
 						+ "\n1: Créer une routine"
