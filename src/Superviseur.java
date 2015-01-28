@@ -5,7 +5,7 @@ public class Superviseur {
 
 	public static void main(String[] args) throws SQLException, ParseException {
 
-		RequetesBD r = new RequetesBD();
+		RequetesBDSuperviseur r = new RequetesBDSuperviseur();
 		Connexion connexion1 = new Connexion();
 
 		String saisie = "";
@@ -32,7 +32,7 @@ public class Superviseur {
 
 				System.out.println("Voici les routines de la base:");
 				System.out.flush();
-				RequetesBD.afficherRoutine(connexion1.getConn());
+				RequetesBDSuperviseur.afficherRoutine(connexion1.getConn());
 				System.out.println("\n\n Choisir option:"
 						+ "\n1: Détailler routine"
 						+ "\n2: Avancement routine vehicule");
@@ -43,7 +43,7 @@ public class Superviseur {
 					System.out.flush();
 					int numRoutine = LectureClavier.lireEntier(saisie);
 					if (numRoutine != 0) {
-						RequetesBD.afficherActions(connexion1.getConn(),
+						RequetesBDSuperviseur.afficherActions(connexion1.getConn(),
 								numRoutine);
 					}
 				} else {
@@ -52,7 +52,7 @@ public class Superviseur {
 					System.out.flush();
 					int immatriculation = LectureClavier.lireEntier(saisie);
 					if (immatriculation != 0) {
-						RequetesBD.afficherActionCourante(connexion1.getConn(),
+						RequetesBDSuperviseur.afficherActionCourante(connexion1.getConn(),
 								immatriculation);
 					}
 				}
@@ -60,7 +60,7 @@ public class Superviseur {
 			case 2:
 				System.out.println("Voici les stations de la base:");
 				System.out.flush();
-				RequetesBD.afficherStation(connexion1.getConn());
+				RequetesBDSuperviseur.afficherStation(connexion1.getConn());
 				System.out.println("\n\n Choisir option:"
 						+ "\n1: Consulter le nombre de velos d'une station"
 						+ "\n2: Consulter nombre velo endommages d'une station"
@@ -74,7 +74,7 @@ public class Superviseur {
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
 					if (numStation != 0) {
-						RequetesBD.afficherNbVeloStation(connexion1.getConn(),numStation);
+						RequetesBDSuperviseur.afficherNbVeloStation(connexion1.getConn(),numStation);
 					}
 				}
 				if(choix.equals("2"))
@@ -84,7 +84,7 @@ public class Superviseur {
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
 					if (numStation != 0) {
-						RequetesBD.afficherNbVeloStationEndommage(connexion1.getConn(),numStation);
+						RequetesBDSuperviseur.afficherNbVeloStationEndommage(connexion1.getConn(),numStation);
 					}	
 				}
 				if(choix.equals("3"))
@@ -94,7 +94,7 @@ public class Superviseur {
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
 					if (numStation != 0) {
-						RequetesBD.afficherNbVeloStationLibres(connexion1.getConn(),numStation);
+						RequetesBDSuperviseur.afficherNbVeloStationLibres(connexion1.getConn(),numStation);
 					}	
 				}
 				break;	
@@ -102,7 +102,7 @@ public class Superviseur {
 			case 4:
 				System.out.println("Voici les stations de la base:");
 				System.out.flush();
-				RequetesBD.afficherStation(connexion1.getConn());
+				RequetesBDSuperviseur.afficherStation(connexion1.getConn());
 				System.out.println("\n\n Choisir option:"
 						+ "\n1: Consulter rapport station/routine"
 						+ "\n2: Consulter nombre velo endommages d'une station");
@@ -115,7 +115,7 @@ public class Superviseur {
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
 					if (numStation != 0) {
-						RequetesBD.afficherActionRoutine(connexion1.getConn(),numStation);
+						RequetesBDSuperviseur.afficherActionRoutine(connexion1.getConn(),numStation);
 					}
 				}
 				if(choix2.equals("2"))
@@ -125,7 +125,7 @@ public class Superviseur {
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
 					if (numStation != 0) {
-						RequetesBD.afficherNbVeloStationEndommage(connexion1.getConn(),numStation);
+						RequetesBDSuperviseur.afficherNbVeloStationEndommage(connexion1.getConn(),numStation);
 					}	
 				}
 				break;
@@ -151,7 +151,7 @@ public class Superviseur {
 					System.out.println("Date routine (dd/mm/yyyy): ");
 					System.out.flush();
 					String dateRoutine = LectureClavier.lireChaine();
-					RequetesBD.insertRoutine(connexion1.getConn(), numRoutine,
+					RequetesBDSuperviseur.insertRoutine(connexion1.getConn(), numRoutine,
 							numSuperviseur, immatriculationVehicule,
 							dateRoutine);
 
@@ -184,7 +184,7 @@ public class Superviseur {
 					System.out.println("Lieu Action: ");
 					System.out.flush();
 					String lieuActionArrive = LectureClavier.lireChaine();
-					RequetesBD.insertAction(connexion1.getConn(), numAction,
+					RequetesBDSuperviseur.insertAction(connexion1.getConn(), numAction,
 							numRoutine, lieuAction, commentaireAction,
 							etatAction, notificationAction, prioriteAction,
 							nbDeplacement, lieuActionArrive);
