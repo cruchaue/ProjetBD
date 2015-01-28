@@ -244,24 +244,28 @@ public class RequetesBD {
 
 	public static void louerVelo(Connection conn, int idVelo,
 			int identifiant) throws SQLException, ParseException {
-		String sql="INSERT INTO LOCATION VALUES(idLocation_seq.nextval,?,?, to_date(?,?), to_date(?,?))";
-		PreparedStatement preparedStatement = conn.prepareStatement(sql);
-		preparedStatement.setInt(1,identifiant);
-		preparedStatement.setInt(2,idVelo);
-		preparedStatement.setString(3, dateActuelle());
-		preparedStatement.setString(4, "dd/mm/yy HH24:MI:SS");
-		preparedStatement.setString(5, "01/01/01 00:00:00");
-		preparedStatement.setString(6, "dd/mm/yy HH24:MI:SS");
-		preparedStatement.executeQuery();
-		preparedStatement.close();
-		//modifier l'état du vélo
-		sql="UPDATE VELO SET POSITION = ? WHERE ID_VELO=?";
-	
-		PreparedStatement preparedStatement2 = conn.prepareStatement(sql);
-		preparedStatement2.setString(1, "location");
-		preparedStatement2.setInt(2, idVelo);
-		preparedStatement2.executeQuery();
-		preparedStatement2.close();
+		try{
+			String sql="INSERT INTO LOCATION VALUES(idLocation_seq.nextval,?,?, to_date(?,?), to_date(?,?))";
+			PreparedStatement preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1,identifiant);
+			preparedStatement.setInt(2,idVelo);
+			preparedStatement.setString(3, dateActuelle());
+			preparedStatement.setString(4, "dd/mm/yy HH24:MI:SS");
+			preparedStatement.setString(5, "01/01/01 00:00:00");
+			preparedStatement.setString(6, "dd/mm/yy HH24:MI:SS");
+			preparedStatement.executeQuery();
+			preparedStatement.close();
+			//modifier l'état du vélo
+			sql="UPDATE VELO SET POSITION = ? WHERE ID_VELO=?";
+		
+			PreparedStatement preparedStatement2 = conn.prepareStatement(sql);
+			preparedStatement2.setString(1, "location");
+			preparedStatement2.setInt(2, idVelo);
+			preparedStatement2.executeQuery();
+			preparedStatement2.close();
+		}catch(java.sql.SQLException e){
+			System.out.print("La location multiple de velo est interdite.");
+		}
 		
 	}
 	
