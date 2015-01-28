@@ -256,7 +256,7 @@ public class RequetesBD {
 		preparedStatement.close();
 		//modifier l'état du vélo
 		sql="UPDATE VELO SET POSITION = ? WHERE ID_VELO=?";
-		System.out.println("velo" + idVelo);
+	
 		PreparedStatement preparedStatement2 = conn.prepareStatement(sql);
 		preparedStatement2.setString(1, "location");
 		preparedStatement2.setInt(2, idVelo);
@@ -496,11 +496,13 @@ public class RequetesBD {
 
 	public static void rendreVelo(Connection conn, int identifiant, int idVelo, int numBorne) throws SQLException, ParseException {
 		
-		String sql="UPDATE LOCATION SET DATE_HEURE_FIN=? WHERE ID_CLIENT=? AND  ID_VELO=?";
+		String sql="UPDATE LOCATION SET DATE_HEURE_FIN=? WHERE ID_CLIENT=? AND  ID_VELO=? AND DATE_HEURE_FIN = to_date(?,?)";
 		PreparedStatement preparedStatement = conn.prepareStatement(sql);
 		preparedStatement.setDate(1, convertStringToDateFormat(dateActuelle()));
 		preparedStatement.setInt(2, identifiant);
 		preparedStatement.setInt(3,idVelo);
+		preparedStatement.setString(4, "01/01/01 00:00:00");
+		preparedStatement.setString(5, "dd/mm/yy HH24:MI:SS");
 		ResultSet rs = preparedStatement.executeQuery();
 		rs.close();
 		preparedStatement.close();
