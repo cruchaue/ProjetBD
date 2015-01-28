@@ -11,6 +11,7 @@ public class Client {
 				+ "\n\nVeuillez choisir une option :" + "\n1 : S'abonner"
 				+ "\n2 : Emprunter un vÃ©lo ou RÃ©server un vÃ©lo" + "\n3 : Rendre un vÃ©lo"
 				+ "\n4 : Infos bornes"
+				+ "\n5 : Réserver un vélo"
 				+ "\n(0 : Quitter)\n");
 		System.out.flush();
 		int i = LectureClavier.lireEntier(saisie);
@@ -157,6 +158,43 @@ public class Client {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			break;
+			
+		case 5:
+			boolean authentification_valide = false;
+			int id =0;
+			int code_secret =0;
+			while (authentification_valide==false) {
+				System.out.println("Authentification");
+				System.out.println("Saisir votre identifiant");
+				System.out.flush();
+				identifiant = LectureClavier.lireEntier(saisie);
+				System.out.println("Saisir votre code secret");
+				System.out.flush();
+				code_secret = LectureClavier.lireEntier(saisie);
+				try {
+					valide= RequetesBD.identification(conn.getConn(), id, code_secret);
+					System.out.println("Réserver un vélo à une station \n");
+					res = RequetesBD.afficherStations(conn.getConn());
+						System.out.println(res);
+						System.out.println("Saisir num station :");
+						System.out.flush();
+						int idStation = LectureClavier.lireEntier(saisie);
+						System.out.println("Choisir une date de réservation (jj-mm-aaaa hh:mm) \n")  ;
+						System.out.flush();
+						
+						String date_location = LectureClavier.lireChaine();
+						// TODO : Test date bien formée
+						
+			
+					
+					RequetesBD.reserverVelo(conn.getConn(),id,idStation,date_location);
+					
+				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

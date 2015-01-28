@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import oracle.net.aso.p;
+//import oracle.net.aso.p;
 
 /**
  * Classe mettant en oeuvre des requ�tes SQL.
@@ -530,6 +530,29 @@ public class RequetesBD {
 		preparedStatement4.setString(4,"dd/mm/yyyy HH24:MI:SS");
 		preparedStatement4.executeQuery();
 		preparedStatement4.close();
+		
+	}
+
+
+	public static void reserverVelo(Connection conn, int identifiant,
+			int idStation, String date_location) {
+
+		String sql = "INSERT INTO RESERVATION VALUES (idReservation_seq.nextval,?,?,?)" ;
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setInt(1, idStation);
+			preparedStatement.setInt(2, identifiant);
+			preparedStatement.setDate(3, convertStringToDateFormat(dateActuelle()));
+			preparedStatement.executeQuery();
+			preparedStatement.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
