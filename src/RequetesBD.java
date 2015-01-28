@@ -479,10 +479,12 @@ public class RequetesBD {
 	
 	public static boolean checkIdVelo(Connection conn, int identifiant, int idVelo) throws SQLException{
 		int res=0;
-		String sql="SELECT count(ID_VELO) FROM LOCATION WHERE ID_CLIENT=?  AND ID_VELO=?";
+		String sql="SELECT count(ID_VELO) FROM LOCATION WHERE ID_CLIENT=?  AND ID_VELO=? AND DATE_HEURE_FIN = to_date(?,?)";
 		PreparedStatement preparedStatement = conn.prepareStatement(sql);
 		preparedStatement.setInt(1, identifiant);
 		preparedStatement.setInt(2, idVelo);
+		preparedStatement.setString(3, "01/01/01 00:00:00");
+		preparedStatement.setString(4, "dd/mm/yy HH24:MI:SS");
 		ResultSet rs = preparedStatement.executeQuery();
 		while(rs.next()){
 			res= rs.getInt("count(ID_VELO)");
