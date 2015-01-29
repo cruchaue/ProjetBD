@@ -203,11 +203,23 @@ public class RequetesBD {
 		preparedStatement.close();
 		//conn.close();
 		
+		sql="select id_client, code_secret from client where id_client = (select max(id_client) from client)";
+		PreparedStatement preparedStatement2 = conn.prepareStatement(sql);
+		ResultSet rs = preparedStatement2.executeQuery();
+		String reponse ="";
+		if(rs.next()){
+			reponse = "Votre mot de passe est : " + rs.getString("code_secret") + " et votre identifant est : "+ rs.getString("id_client");
+		}
+		//System.out.println(reponse);
+		preparedStatement2.close();
+		rs.close();
+		
 	
 	}
 
 	public static int insertClient(Connection conn, int numCB) throws SQLException {
 		int codeSecret = 112212;
+		int id=0;
 		String sql = "INSERT INTO CLIENT VALUES (idClient_seq.nextval,?,?,?,null,null,null,null,null,null,null,null,null)";
 		PreparedStatement preparedStatement = conn.prepareStatement(sql);
 		preparedStatement.setInt(1, numCB);
@@ -217,6 +229,17 @@ public class RequetesBD {
 		preparedStatement.close();
 		
 		
+		sql="select id_client, code_secret from client where id_client = (select max(id_client) from client)";
+		PreparedStatement preparedStatement2 = conn.prepareStatement(sql);
+		ResultSet rs = preparedStatement2.executeQuery();
+		String reponse ="";
+		if(rs.next()){
+			reponse = "Votre mot de passe est : " + rs.getString("code_secret")+ rs.getString("id_client");
+			id = rs.getInt("id_client");
+		}
+		//System.out.println(reponse);
+		preparedStatement2.close();
+		rs.close();
 		
 		return codeSecret;
 	}

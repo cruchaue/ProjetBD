@@ -11,7 +11,7 @@ public class Client {
 				+ "\n\nVeuillez choisir une option :" + "\n1 : S'abonner"
 				+ "\n2 : Emprunter un vélo ou Réserver un vélo" + "\n3 : Rendre un vélo"
 				+ "\n4 : Infos bornes"
-				+ "\n5 : R�server un v�lo"
+				+ "\n5 : R�server un v�lo"
 				+ "\n(0 : Quitter)\n");
 		System.out.flush();
 		int i = LectureClavier.lireEntier(saisie);
