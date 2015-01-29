@@ -16,10 +16,10 @@ public class Superviseur {
 			.println("Bonjour ! Bienvenue dans l'application VEPICK:"
 					+ "\n\nVeuillez choisir une option:"
 					+ "\n1: Consulter routines"
-					+ "\n2: Consulter état vélos"
+					+ "\n2: Consulter vélos"
 					+ "\n3: Consulter/Editer plages horaires"
 					+ "\n4: Consulter informations stations "
-					+ "\n5: Modifier routine" + "\n(0: Quitter)\n");
+					+ "\n5: Editer/Modifier routine routine" + "\n(0: Quitter)\n");
 
 			System.out.flush();
 			int i = LectureClavier.lireEntier(saisie);
@@ -29,13 +29,12 @@ public class Superviseur {
 				System.exit(0);
 				break;
 			case 1:
-
 				System.out.println("Voici les routines de la base:");
 				System.out.flush();
 				RequetesBDSuperviseur.afficherRoutine(connexion1.getConn());
-				System.out.println("\n\n Choisir option:"
+				System.out.println("\n\nChoisir option:"
 						+ "\n1: Détailler routine"
-						+ "\n2: Avancement routine vehicule");
+						+ "\n2: Consulter avancement routine vehicule");
 				System.out.flush();
 				if (LectureClavier.lireChaine().equals("1")) {
 					System.out
@@ -61,11 +60,10 @@ public class Superviseur {
 				System.out.println("Voici les stations de la base:");
 				System.out.flush();
 				RequetesBDSuperviseur.afficherStation(connexion1.getConn());
-				System.out.println("\n\n Choisir option:"
+				System.out.println("\n\nChoisir option:"
 						+ "\n1: Consulter le nombre de velos d'une station"
-						+ "\n2: Consulter nombre velo endommages d'une station"
-						+ "\n3: Consulter nombre de place libre d'une station");
-
+						+ "\n2: Consulter nombre velos endommages d'une station"
+						+ "\n3: Consulter nombre de places libres d'une station");
 				System.out.flush();
 				String choix = LectureClavier.lireChaine();
 				if (choix.equals("1")) {
@@ -90,15 +88,67 @@ public class Superviseur {
 				if(choix.equals("3"))
 				{
 					System.out
-					.println("Nombre velos station (saisir numero station ou '0' pour terminer): ");
+					.println("Nombre de places libres(saisir numero station ou '0' pour terminer): ");
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
 					if (numStation != 0) {
 						RequetesBDSuperviseur.afficherNbVeloStationLibres(connexion1.getConn(),numStation);
 					}	
 				}
-				break;	
+				break;
+			case 3:
+				System.out.println("Voici les plages horaires de la base:");
+				System.out.flush();
+				RequetesBDSuperviseur.afficherPlagesHoraires(connexion1.getConn());	
+				System.out.println("\n\n Choisir option:"
+						+ "\n1: Créer plage horaire"
+						+ "\n2: Modifier plage horaire");
+				System.out.flush();
+				String choix3 = LectureClavier.lireChaine();
+				if (choix3.equals("1")) {
+					System.out
+					.println("Numero de station ");
+					System.out.flush();
+					int numStation = LectureClavier.lireEntier(saisie);
+					System.out.println("Numero plage: ");
+					System.out.flush();
+					int numPlage = LectureClavier.lireEntier(saisie);
+					System.out.println("Date debut (JJ/MM/YYYY): ");
+					System.out.flush();
+					String dateDebut = LectureClavier.lireChaine();
+					System.out.println("Date fin (JJ/MM/YYYY): ");
+					System.out.flush();
+					String dateFin = LectureClavier.lireChaine();
+					System.out.println("Etat station: ");
+					System.out.flush();
+					String etatStation = LectureClavier.lireChaine();
+					RequetesBDSuperviseur.creerPlagehoraire(connexion1.getConn(), numStation, numPlage, dateDebut
+							, dateFin, etatStation);
+				}
+				if (choix3.equals("2")) {
+					System.out
+					.println("Plage horaire à modifier (saisir numero plage horaire ou '0' pour terminer): ");
+					System.out.flush();
+					int numPlage = LectureClavier.lireEntier(saisie);
+					if (numPlage != 0) {
+						System.out
+						.println("Numero de station ");
+						System.out.flush();
+						int numStation = LectureClavier.lireEntier(saisie);
+						System.out.println("Date debut (JJ/MM/YYYY): ");
+						System.out.flush();
+						String dateDebut = LectureClavier.lireChaine();
+						System.out.println("Date fin (JJ/MM/YYYY): ");
+						System.out.flush();
+						String dateFin = LectureClavier.lireChaine();
+						System.out.println("Etat station: ");
+						System.out.flush();
+						String etatStation = LectureClavier.lireChaine();
+						RequetesBDSuperviseur.editerPlagehoraire(connexion1.getConn(),numPlage, numPlage, dateDebut, dateFin, etatStation);
+					}
+				}
 
+				break;
 			case 4:
 				System.out.println("Voici les stations de la base:");
 				System.out.flush();
@@ -121,7 +171,7 @@ public class Superviseur {
 				if(choix2.equals("2"))
 				{
 					System.out
-					.println("Nombre velos dans vehicule (saisir numero station ou '0' pour terminer): ");
+					.println("Nombre velos dans vehicule (saisir numero vehicule ou '0' pour terminer): ");
 					System.out.flush();
 					int numVehicule = LectureClavier.lireEntier(saisie);
 					if (numVehicule != 0) {
@@ -137,9 +187,6 @@ public class Superviseur {
 				System.out.flush();
 				int saisie5 = LectureClavier.lireEntier(saisie);
 				if (saisie5 == 1) {
-					System.out.println("Numéro routine: ");
-					System.out.flush();
-					int numRoutine = LectureClavier.lireEntier(saisie);
 					System.out.println("Numéro Superviseur: ");
 					System.out.flush();
 					int numSuperviseur = LectureClavier.lireEntier(saisie);
@@ -150,7 +197,7 @@ public class Superviseur {
 					System.out.println("Date routine (dd/mm/yyyy): ");
 					System.out.flush();
 					String dateRoutine = LectureClavier.lireChaine();
-					RequetesBDSuperviseur.insertRoutine(connexion1.getConn(), numRoutine,
+					RequetesBDSuperviseur.insertRoutine(connexion1.getConn(),
 							numSuperviseur, immatriculationVehicule,
 							dateRoutine);
 
@@ -183,7 +230,7 @@ public class Superviseur {
 					System.out.println("Lieu Action: ");
 					System.out.flush();
 					String lieuActionArrive = LectureClavier.lireChaine();
-					RequetesBDSuperviseur.insertAction(connexion1.getConn(), numAction,
+					RequetesBDSuperviseur.insertAction(connexion1.getConn(),
 							numRoutine, lieuAction, commentaireAction,
 							etatAction, notificationAction, prioriteAction,
 							nbDeplacement, lieuActionArrive);
