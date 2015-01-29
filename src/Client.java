@@ -11,7 +11,7 @@ public class Client {
 				+ "\n\nVeuillez choisir une option :" + "\n1 : S'abonner"
 				+ "\n2 : Emprunter un vÃ©lo ou RÃ©server un vÃ©lo" + "\n3 : Rendre un vÃ©lo"
 				+ "\n4 : Infos bornes"
-				+ "\n5 : Réserver un vélo"
+				+ "\n5 : Rï¿½server un vï¿½lo"
 				+ "\n(0 : Quitter)\n");
 		System.out.flush();
 		int i = LectureClavier.lireEntier(saisie);
@@ -178,17 +178,17 @@ public class Client {
 				code_secret = LectureClavier.lireEntier(saisie);
 				try {
 					valide= RequetesBD.identification(conn.getConn(), id, code_secret);
-					System.out.println("Réserver un vélo à une station \n");
+					System.out.println("Rï¿½server un vï¿½lo ï¿½ une station \n");
 					res = RequetesBD.afficherStations(conn.getConn());
 						System.out.println(res);
 						System.out.println("Saisir num station :");
 						System.out.flush();
 						int idStation = LectureClavier.lireEntier(saisie);
-						System.out.println("Choisir une date de réservation (jj-mm-aaaa hh:mm) \n")  ;
+						System.out.println("Choisir une date de rï¿½servation (jj-mm-aaaa hh:mm) \n")  ;
 						System.out.flush();
 						
 						String date_location = LectureClavier.lireChaine();
-						// TODO : Test date bien formée
+						// TODO : Test date bien formï¿½e
 						
 			
 					

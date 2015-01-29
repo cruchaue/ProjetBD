@@ -140,19 +140,26 @@ BEGIN
 END;
 /
 
+SELECT l1.DATE_HEURE_DEBUT 
+	FROM LOCATION l1, LOCATION l2
+	WHERE l1.ID_LOCATION = l2.ID_LOCATION
+
+to_date('12/01/2015','dd/mm/yyyy') - to_date('01/01/01 00:00:00','dd/mm/yy HH24:MI:SS');
 AND l1.DATE_HEURE_FIN != to_date('01/01/01 00:00:00','dd/mm/yy HH24:MI:SS');
+AND l1.DATE_HEURE_FIN!=l2.DATE_HEURE_FIN
 CREATE OR REPLACE TRIGGER gen_amende
 AFTER update on LOCATION 
 DECLARE
 	dateDebut DATE;
-	heures int;
-BEGIN 
-	SELECT DATE_HEURE_DEBUT into dateDebut
+	diff float;
+BEGIN
+	dateDebut:=0;
+	SELECT l1.DATE_HEURE_DEBUT into dateDebut
 	FROM LOCATION l1, LOCATION l2
-	WHERE l1.ID_LOCATION = l2.ID_LOCATION
+	WHERE l1.ID_LOCATION = l2.ID_LOCATION 
 	AND l1.DATE_HEURE_FIN!=l2.DATE_HEURE_FIN;
-	dateDebut := (sysdate - dateDebut)*24;
-	if dateDebut > 12 then
+	diff:= (sysdate - dateDebut)*24;
+	if diff > 12 then
 		raise_application_error(-20100,'Vous avez une amende');
 	end if;
 END; 

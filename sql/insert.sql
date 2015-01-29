@@ -3,11 +3,11 @@
 /*==============================================================*/
 
 
-INSERT INTO CLIENT VALUES (0,1511948948,1478,'oui','GALLET','Jordan',TO_DATE('01/02/1992','dd/mm/yyyy'),'homme','Chambéry','49 rue de gipsy king',73000,TO_DATE('12/01/2014','dd/mm/yyyy'),TO_DATE('12/01/2014','dd/mm/yyyy'));
-INSERT INTO CLIENT VALUES (1,1511948948,84844,'oui','CRUCHAUDET','Emerick',TO_DATE('30/05/1991','dd/mm/yyyy'),'homme','Dijon','10 avenue de happn',73000,TO_DATE('12/01/2014','dd/mm/yyyy'),TO_DATE('12/01/2014','dd/mm/yyyy'));
-INSERT INTO CLIENT VALUES (2,1511948948,0,'oui','CHAIEB','Mohamed',TO_DATE('29/07/1989','dd/mm/yyyy'),'homme','Voreppe','2 rue des colonnes',73000,TO_DATE('12/01/2014','dd/mm/yyyy'),TO_DATE('12/01/2014','dd/mm/yyyy'));
-INSERT INTO CLIENT VALUES (3,1511948948,1,'non',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO CLIENT VALUES (4,1511948948,2,'non',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO CLIENT VALUES (idClient_seq.nextval,1511948948,1478,'oui','GALLET','Jordan',TO_DATE('01/02/1992','dd/mm/yyyy'),'homme','Chambéry','49 rue de gipsy king',73000,TO_DATE('12/01/2014','dd/mm/yyyy'),TO_DATE('12/01/2014','dd/mm/yyyy'));
+INSERT INTO CLIENT VALUES (idClient_seq.nextval,1511948948,84844,'oui','CRUCHAUDET','Emerick',TO_DATE('30/05/1991','dd/mm/yyyy'),'homme','Dijon','10 avenue de happn',73000,TO_DATE('12/01/2014','dd/mm/yyyy'),TO_DATE('12/01/2014','dd/mm/yyyy'));
+INSERT INTO CLIENT VALUES (idClient_seq.nextval,1511948948,0,'oui','CHAIEB','Mohamed',TO_DATE('29/07/1989','dd/mm/yyyy'),'homme','Voreppe','2 rue des colonnes',73000,TO_DATE('12/01/2014','dd/mm/yyyy'),TO_DATE('12/01/2014','dd/mm/yyyy'));
+INSERT INTO CLIENT VALUES (idClient_seq.nextval,1511948948,1,'non',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO CLIENT VALUES (idClient_seq.nextval,1511948948,2,'non',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO CLIENT VALUES (idClient_seq.nextval,1511948948,2,'non',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*==============================================================*/
 /* Table : SUPERVISEUR                                          ok*/
