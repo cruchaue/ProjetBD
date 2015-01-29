@@ -438,6 +438,7 @@ public class RequetesBD {
 		}	
 		return (res==1);
 	}
+	
 
 
 	public static boolean isAbonne(Connection conn, int identifiant) throws SQLException {
@@ -518,14 +519,23 @@ public class RequetesBD {
 		preparedStatement2.executeQuery();
 		preparedStatement2.close();
 		//Nouvelle date
-		sql="INSERT INTO \"DATE\" VALUES (to_date(?,?))";
+		//sql="INSERT INTO \"DATE\" VALUES (to_date(?,?))";
 		String dateInserte = dateActuelle();
+		
+	
+		
+		
+		
 		/*System.out.println(dateActuelle());
 		PreparedStatement preparedStatement3 = conn.prepareStatement(sql);
 		preparedStatement3.setString(1, dateInserte);
 		preparedStatement3.setString(2, "dd/mm/yyyy HH24:MI:SS");
 		preparedStatement3.executeQuery();
 		preparedStatement3.close();*/
+		
+		vplusVmoins(conn,idVelo,identifiant);
+		
+		
 		sql="INSERT INTO VELOBORNETTE VALUES (?,?,to_date(?,?))";
 		PreparedStatement preparedStatement4 = conn.prepareStatement(sql);
 		preparedStatement4.setInt(1, numBorne);
@@ -535,31 +545,114 @@ public class RequetesBD {
 		preparedStatement4.executeQuery();
 		preparedStatement4.close();
 		
+		
+		
+		
+		
 	}
 
 
 	public static void reserverVelo(Connection conn, int identifiant,
 			int idStation, String date_location) {
 
-		String sql = "INSERT INTO RESERVATION VALUES (idReservation_seq.nextval,?,?,?)" ;
+		String sql = "INSERT INTO RESERVATION VALUES (idReservation_seq.nextval,?,?,to_date(?,?))" ;
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.setInt(1, idStation);
 			preparedStatement.setInt(2, identifiant);
-			preparedStatement.setDate(3, convertStringToDateFormat(dateActuelle()));
+			preparedStatement.setString(3, date_location);
+			preparedStatement.setString(4, "dd-mm-yy HH24:MI");
 			preparedStatement.executeQuery();
 			preparedStatement.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 	
+	
+	public static void vplusVmoins(Connection conn, int idVelo, int identifiant){
+	
+		try{
+		//récupérer le numéro de bornette par rapport au numéro de vélo au moment de la location (avant insertion)
+		String bornetteDeDepart = "select num_borne from (select num_borne,heure_date from velobornette where id_velo = ? order by heure_date desc) where rownum = 1";
+		PreparedStatement preparedStatement6 = conn.prepareStatement(bornetteDeDepart);
+		preparedStatement6.setInt(1, idVelo);
+		ResultSet rs1 = preparedStatement6.executeQuery();
+		int numBorneDepart = 0;
+		if(rs1.next()){
+			 numBorneDepart = rs1.getInt("num_borne");
+		}
+		System.out.println("numéro de borne de départ : "+numBorneDepart);
+
+		
+		//récupère le numéro de la station --> regarder par rapport à l'heure de location, si vmoins
+		String stationDeDepart = "select num_station from Bornette where num_borne = ?"; // ? resultat de requete bornetteDeDepart
+		
+		PreparedStatement preparedStatement7 = conn.prepareStatement(stationDeDepart);
+		preparedStatement7.setInt(1, numBorneDepart);
+		ResultSet rs2 = preparedStatement7.executeQuery();
+		int numStationDepart = 0;
+		if(rs2.next()){
+			 numStationDepart = rs2.getInt("num_station");
+		}
+		System.out.println("Récupère numéro de statio ndépart :" + numStationDepart
+				);
+		// on récupère l'heure de location
+		String dateLocation = "select date_heure_debut from location where id_client = ?"; // ? = identifiant
+		
+		PreparedStatement preparedStatement8;
+		preparedStatement8 = conn.prepareStatement(dateLocation);
+		preparedStatement8.setInt(1, identifiant);
+		ResultSet rs3 = preparedStatement8.executeQuery();
+		
+		String dateDebLocation = "";
+		if(rs3.next()){
+			 dateDebLocation = rs3.getString(identifiant); // il faut extraire l'heure
+		}
+		
+		System.out.println("Afficher l'heure");
+		
+		SimpleDateFormat dateFormatComp;
+		 
+	    dateFormatComp = new SimpleDateFormat("hh:mm a");
+	    System.out.println(dateFormatComp.format(dateDebLocation));
+	    
+		String vquoidep = "select etat_station from Plagehoraire where ? BETWEEN Date_debut AND Date_fin;";
+		PreparedStatement preparedStatement9 = conn.prepareStatement(vquoidep);
+		preparedStatement9.setString(1, dateDebLocation);
+		ResultSet rs4 = preparedStatement9.executeQuery();
+		String vquoidepres = "";
+		while(rs4.next()){
+			 vquoidepres = rs4.getString("etat_station"); // 
+		}
+		
+		
+		//  tester la station de retour si vplus
+		String vquoifin = "select etat_station from Plagehoraire where sysdate BETWEEN Date_debut AND date_fin";
+		PreparedStatement preparedStatement10 = conn.prepareStatement(vquoifin);
+		preparedStatement10.setInt(1, identifiant);
+		ResultSet rs5 = preparedStatement9.executeQuery();
+		String vquoifinres = " ";
+		if(rs5.next()){
+		 vquoifinres = rs5.getString("etat_station"); // il faut extraire l'heure
+		}
+		if(vquoidepres.equals("Vmoins") && vquoifinres.equals("Vplus")){
+			System.out.println("Vous bénéficiez d'une réduction");
+		}
+		
+		
+		}
+		 catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+	}
+	
 }
 
+	
 

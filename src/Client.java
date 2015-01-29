@@ -168,19 +168,25 @@ public class Client {
 			boolean authentification_valide = false;
 			int id =0;
 			int code_secret =0;
-			while (authentification_valide==false) {
+			try{
+			while (!authentification_valide) {
 				System.out.println("Authentification");
 				System.out.println("Saisir votre identifiant");
 				System.out.flush();
-				identifiant = LectureClavier.lireEntier(saisie);
+				id = LectureClavier.lireEntier(saisie);
+				if(!RequetesBD.isAbonne(conn.getConn(), id)){
+					System.out.println("Il faut être abonné pour réserver");
+				}
 				System.out.println("Saisir votre code secret");
 				System.out.flush();
 				code_secret = LectureClavier.lireEntier(saisie);
-				try {
-					valide= RequetesBD.identification(conn.getConn(), id, code_secret);
+				authentification_valide= RequetesBD.identification(conn.getConn(), id, code_secret);
+			}
 					System.out.println("Réserver un vélo à une station \n");
 					res = RequetesBD.afficherStations(conn.getConn());
 						System.out.println(res);
+						
+
 						System.out.println("Saisir num station :");
 						System.out.flush();
 						int idStation = LectureClavier.lireEntier(saisie);
@@ -189,17 +195,16 @@ public class Client {
 						
 						String date_location = LectureClavier.lireChaine();
 						// TODO : Test date bien formée
-						
+						//System.out.println(date_location);
 			
 					
 					RequetesBD.reserverVelo(conn.getConn(),id,idStation,date_location);
-					
+					break;
+
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			break;
 		}
 	}
-}

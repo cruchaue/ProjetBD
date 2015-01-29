@@ -140,7 +140,11 @@ BEGIN
 END;
 /
 
+
+
 AND l1.DATE_HEURE_FIN != to_date('01/01/01 00:00:00','dd/mm/yy HH24:MI:SS');
+
+
 CREATE OR REPLACE TRIGGER gen_amende
 AFTER update on LOCATION 
 DECLARE

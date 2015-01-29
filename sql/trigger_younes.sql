@@ -85,7 +85,7 @@ INSERT INTO LOCATION VALUES (004,0,0,TO_DATE('27-01-2015 08:30','dd-mm-yyyy HH24
 /*==============================================================*/
 SET SERVEROUTPUT ON;
 CREATE OR REPLACE TRIGGER VerificationCodeGenere
-AFTER UPDATE ON CLIENT
+AFTER INSERT OR UPDATE ON CLIENT
 DECLARE  
 nbCode integer;
 BEGIN
@@ -336,7 +336,17 @@ UPDATE VELO SET position = 'location' WHERE id_velo = 245;
 --- => le trigger est déclenché 
 
 
+CREATE SEQUENCE idReservation_seq;
 
+CREATE OR REPLACE TRIGGER idReservation_auto
+BEFORE INSERT ON Reservation
+FOR EACH ROW
+BEGIN
+  SELECT idReservation_seq.nextval
+  INTO   :new.num_reservation
+  FROM   dual;
+END;
+/
 
 
 
