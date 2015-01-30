@@ -268,6 +268,7 @@ public class RequetesBD {
 	public static void louerVelo(Connection conn, int idVelo,
 			int identifiant) throws SQLException, ParseException {
 		try{
+			conn.setAutoCommit(false);
 			String sql="INSERT INTO LOCATION VALUES(idLocation_seq.nextval,?,?, to_date(?,?), to_date(?,?))";
 			PreparedStatement preparedStatement = conn.prepareStatement(sql);
 			preparedStatement.setInt(1,identifiant);
@@ -286,7 +287,10 @@ public class RequetesBD {
 			preparedStatement2.setInt(2, idVelo);
 			preparedStatement2.executeQuery();
 			preparedStatement2.close();
-		}catch(java.sql.SQLException e){
+			conn.setAutoCommit(true);
+
+		}catch(java.sql.SQLException sqle){
+			try{conn.rollback();}catch(Exception e){}
 			System.out.print("La location multiple de velo est interdite.");
 		}
 		
@@ -522,52 +526,67 @@ public class RequetesBD {
 	}
 
 
-	public static void rendreVelo(Connection conn, int identifiant, int idVelo, int numBorne) throws SQLException, ParseException {
+	public static void rendreVelo(Connection conn, int identifiant, int idVelo, int numBorne)  {
 		
 		String sql="UPDATE LOCATION SET DATE_HEURE_FIN=? WHERE ID_CLIENT=? AND  ID_VELO=? AND DATE_HEURE_FIN = to_date(?,?)";
-		PreparedStatement preparedStatement = conn.prepareStatement(sql);
-		preparedStatement.setDate(1, convertStringToDateFormat(dateActuelle()));
-		preparedStatement.setInt(2, identifiant);
-		preparedStatement.setInt(3,idVelo);
-		preparedStatement.setString(4, "01/01/01 00:00:00");
-		preparedStatement.setString(5, "dd/mm/yy HH24:MI:SS");
-		ResultSet rs = preparedStatement.executeQuery();
-		rs.close();
-		preparedStatement.close();
-		//Passage de etat location a bornette pour le velo
-		sql="UPDATE VELO SET POSITION = ? WHERE ID_VELO=?";
-		PreparedStatement preparedStatement2 = conn.prepareStatement(sql);
-		preparedStatement2.setString(1, "bornette");
-		preparedStatement2.setInt(2, idVelo);
-		preparedStatement2.executeQuery();
-		preparedStatement2.close();
-		//Nouvelle date
-		//sql="INSERT INTO \"DATE\" VALUES (to_date(?,?))";
-		String dateInserte = dateActuelle();
+		PreparedStatement preparedStatement;
+		try {
+			conn.setAutoCommit(false);
+			preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setDate(1, convertStringToDateFormat(dateActuelle()));
+			preparedStatement.setInt(2, identifiant);
+			preparedStatement.setInt(3,idVelo);
+			preparedStatement.setString(4, "01/01/01 00:00:00");
+			preparedStatement.setString(5, "dd/mm/yy HH24:MI:SS");
+			ResultSet rs = preparedStatement.executeQuery();
+			rs.close();
+			preparedStatement.close();
+			//Passage de etat location a bornette pour le velo
+			sql="UPDATE VELO SET POSITION = ? WHERE ID_VELO=?";
+			PreparedStatement preparedStatement2 = conn.prepareStatement(sql);
+			preparedStatement2.setString(1, "bornette");
+			preparedStatement2.setInt(2, idVelo);
+			preparedStatement2.executeQuery();
+			preparedStatement2.close();
+			//Nouvelle date
+			//sql="INSERT INTO \"DATE\" VALUES (to_date(?,?))";
+			String dateInserte = dateActuelle();
+			
+			
+			
+			
+			/*System.out.println(dateActuelle());
+			PreparedStatement preparedStatement3 = conn.prepareStatement(sql);
+			preparedStatement3.setString(1, dateInserte);
+			preparedStatement3.setString(2, "dd/mm/yyyy HH24:MI:SS");
+			preparedStatement3.executeQuery();
+			preparedStatement3.close();*/
+			
+			//vplusVmoins(conn,idVelo,identifiant);
+			
+			
+			sql="INSERT INTO VELOBORNETTE VALUES (?,?,to_date(?,?))";
+			PreparedStatement preparedStatement4 = conn.prepareStatement(sql);
+			preparedStatement4.setInt(1, numBorne);
+			preparedStatement4.setInt(2, idVelo);
+			preparedStatement4.setString(3,dateInserte);
+			preparedStatement4.setString(4,"dd/mm/yyyy HH24:MI:SS");
+			preparedStatement4.executeQuery();
+			preparedStatement4.close();
+			
+			conn.setAutoCommit(true);
+			
+		} catch (SQLException sqle) {
+			 try{conn.rollback();}catch(Exception e){}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	
 		
-		
-		
-		/*System.out.println(dateActuelle());
-		PreparedStatement preparedStatement3 = conn.prepareStatement(sql);
-		preparedStatement3.setString(1, dateInserte);
-		preparedStatement3.setString(2, "dd/mm/yyyy HH24:MI:SS");
-		preparedStatement3.executeQuery();
-		preparedStatement3.close();*/
-		
-		vplusVmoins(conn,idVelo,identifiant);
-		
-		
-		sql="INSERT INTO VELOBORNETTE VALUES (?,?,to_date(?,?))";
-		PreparedStatement preparedStatement4 = conn.prepareStatement(sql);
-		preparedStatement4.setInt(1, numBorne);
-		preparedStatement4.setInt(2, idVelo);
-		preparedStatement4.setString(3,dateInserte);
-		preparedStatement4.setString(4,"dd/mm/yyyy HH24:MI:SS");
-		preparedStatement4.executeQuery();
-		preparedStatement4.close();
-		
+	
 		
 		
 		

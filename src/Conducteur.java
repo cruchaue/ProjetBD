@@ -116,7 +116,8 @@ public class Conducteur {
 			saisie = "";
 		} else if (action.getCommentaire().toLowerCase()
 				.contains(cas2.toLowerCase())) {
-			// reparer velo
+			String ListebornetteHs = RequetesVehicule.afficherBornetteHs(connection, action);
+			System.out.println(ListebornetteHs);
 			int nbVeloReparation = 0;
 			nbVeloReparation = action.getNbDeplacement();
 			for (int i = 0; i < nbVeloReparation; i++) {
@@ -153,7 +154,8 @@ public class Conducteur {
 		} else if (action.getCommentaire().toLowerCase()
 				.contains(cas4.toLowerCase())) {
 			// velo reparation
-
+			String ListeVeloHs = RequetesVehicule.afficherVeloHs(connection, action);
+			System.out.println(ListeVeloHs);
 			int nbVeloReparation = 0;
 			nbVeloReparation = action.getNbDeplacement();
 			for (int i = 0; i < nbVeloReparation; i++) {

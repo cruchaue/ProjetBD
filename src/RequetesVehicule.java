@@ -183,29 +183,40 @@ public class RequetesVehicule {
 
 
 
-	public static void embarquerVelo(Connection connection,	ArrayList veloEmbarque, ActionPropriete action, int immat) throws SQLException, ParseException, java.text.ParseException {
+	public static void embarquerVelo(Connection connection,	ArrayList veloEmbarque, ActionPropriete action, int immat) {
 		// changer etat velo
-		
-		for(int i = 0; i<veloEmbarque.size();i++){
-			PreparedStatement st = connection.prepareStatement("UPDATE velo SET position = 'voiture' WHERE id_velo= ?");
-			// Execute the query
-			st.setInt(1, (int) veloEmbarque.get(i));		
-			ResultSet rs = st.executeQuery();
-			rs.close();
-			st.close();	
-		
-			String dateActuelle = dateActuelle();
+	      try {
+			connection.setAutoCommit(false);
+			for(int i = 0; i<veloEmbarque.size();i++){
+				PreparedStatement st = connection.prepareStatement("UPDATE velo SET position = 'voiture' WHERE id_velo= ?");
+				// Execute the query
+				st.setInt(1, (int) veloEmbarque.get(i));		
+				ResultSet rs = st.executeQuery();
+				rs.close();
+				st.close();	
 			
-			PreparedStatement st2 = connection.prepareStatement("Insert into TransporterVehiculeVelo values (?, ?, ?)");
-			// Execute the query
-			st2.setInt(1, (int) veloEmbarque.get(i));
-			st2.setInt(2, immat);
-			st2.setDate(3, convertStringToDateFormat(dateActuelle));		
-			ResultSet rs2 = st2.executeQuery();
-			rs2.close();
-			st2.close();	
-			
+				String dateActuelle = dateActuelle();
+				
+				PreparedStatement st2 = connection.prepareStatement("Insert into TransporterVehiculeVelo values (?, ?, ?)");
+				// Execute the query
+				st2.setInt(1, (int) veloEmbarque.get(i));
+				st2.setInt(2, immat);
+				st2.setDate(3, convertStringToDateFormat(dateActuelle));		
+				ResultSet rs2 = st2.executeQuery();
+				rs2.close();
+				st2.close();	
+				
+				
+			}
+		      connection.setAutoCommit(true);
+		} catch(SQLException sqle)
+	      {
+			   try{connection.rollback();}catch(Exception e){}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 
 		//creer entite vehiculevelo
 		
@@ -286,6 +297,43 @@ public class RequetesVehicule {
 		rs2.close();
 		st2.close();
 		
+	}
+
+
+
+
+	public static String afficherVeloHs(Connection connection,
+			ActionPropriete action) throws SQLException {
+		String res = "";
+		PreparedStatement st = connection.prepareStatement("SELECT distinct(velo.id_velo) FROM VELO INNER JOIN VELOBORNETTE ON VELO.ID_VELO = VELOBORNETTE.ID_VELO INNER JOIN BORNETTE ON VELOBORNETTE.NUM_BORNE=BORNETTE.NUM_BORNE WHERE Bornette.NUM_STATION=? and velo.position = 'bornette' and velo.etat='hs'");
+		// Execute the query
+		st.setString(1, action.getLieu());
+		ResultSet rs = st.executeQuery();
+		while (rs.next()) {
+			res += "Numéro vélo hs : " +rs.getString("id_velo") + "\n";		
+		}
+		rs.close();
+		st.close();
+		return res;
+	}
+
+
+
+
+	public static String afficherBornetteHs(Connection connection,
+			ActionPropriete action) throws NumberFormatException, SQLException {
+		String res="";
+		String sql="SELECT distinct(b.num_borne) FROM BORNETTE b, VELOBORNETTE vb, VELO v WHERE NUM_STATION = ? AND b.NUM_BORNE = vb.NUM_BORNE AND v.ID_VELO = vb.ID_VELO AND b.ETAT = ?";
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		preparedStatement.setInt(1, Integer.parseInt(action.getLieu()));
+		preparedStatement.setString(2, "hs");
+		ResultSet rs = preparedStatement.executeQuery();
+		while(rs.next()){
+		res +="bornette Hs : " + rs.getInt("NUM_BORNE")+"\n";
+		}
+		rs.close();
+		preparedStatement.close();
+		return res;
 	}
 	
 }

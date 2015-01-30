@@ -55,7 +55,7 @@ public class RequetesBDSuperviseur {
 					+ "Numero Superviseur: "
 					+ rs.getString("NUM_SUPERVISEUR")
 					+ "\n"
-					+ "Immatriculation vÃ©hicule : "
+					+ "Immatriculation véhicule : "
 					+ rs.getString("IMMATRICULATION")
 					+ "\n"
 					+ "Date routine : "
@@ -157,7 +157,7 @@ public class RequetesBDSuperviseur {
 			int immatriculation) throws SQLException {
 
 		String res = "";
-		String sql = "SELECT * FROM ACTION WHERE ETAT='null' AND NUM_ROUTINE = (SELECT NUM_ROUTINE FROM ROUTINE WHERE IMMATRICULATION = ?)";
+		String sql = "SELECT * FROM ACTION WHERE ETAT='null' AND NUM_ROUTINE = (SELECT DISTINCT NUM_ROUTINE FROM ROUTINE WHERE IMMATRICULATION = ? AND ROWNUM <2)";
 		PreparedStatement preparedStatement = conn.prepareStatement(sql);
 		preparedStatement.setInt(1, immatriculation);
 		ResultSet rs = preparedStatement.executeQuery();
@@ -245,7 +245,7 @@ public class RequetesBDSuperviseur {
 		{
 			int nbvelos = rs.getInt(1);
 			System.out.println("Il y a : " + nbvelos
-					+ " vÃ©los dans la station " + numStation + ".");
+					+ " vélos dans la station " + numStation + ".");
 		}
 		preparedStatement.close();
 		// Execute the query
@@ -267,7 +267,7 @@ public class RequetesBDSuperviseur {
 		{
 			int nbvelos = rs.getInt(1);
 			System.out.println("Il y a : " + nbvelos
-					+ " vÃ©los endommages dans la station " + numStation + ".");
+					+ " vélos endommages dans la station " + numStation + ".");
 		}
 		preparedStatement.close();
 		// Execute the query
@@ -276,9 +276,9 @@ public class RequetesBDSuperviseur {
 	public static void afficherNbVeloStationLibres(Connection conn,
 			int numStation) throws SQLException {
 		String res = "";
-		String sql = "SELECT COUNT(*)"
+		String sql = "SELECT COUNT(*) "
 				+ "FROM VELO INNER JOIN VELOBORNETTE ON VELO.ID_VELO = VELOBORNETTE.ID_VELO INNER JOIN BORNETTE ON VELOBORNETTE.NUM_BORNE=BORNETTE.NUM_BORNE INNER JOIN STATION ON BORNETTE.NUM_STATION=STATION.NUM_STATION "
-				+ "WHERE STATION.NUM_STATION=? AND(VELO.POSITION=? OR VELO.POSITION=?) ";
+				+ "WHERE STATION.NUM_STATION=? AND(VELO.POSITION=? OR VELO.POSITION=?)";
 		PreparedStatement preparedStatement = conn.prepareStatement(sql);
 		preparedStatement.setInt(1, numStation);
 		preparedStatement.setString(2, "location");
@@ -386,16 +386,17 @@ public class RequetesBDSuperviseur {
 		System.out.println(res);		
 	}
 
-	public static void creerPlagehoraire(Connection conn, int numStation, int numPlage, String dateDebut
-			, String datePlage, String etatStation) throws SQLException, ParseException {
+	public static void creerPlagehoraire(Connection conn, int numStation, String dateDebut
+			, String dateFin, String etatStation) throws SQLException, ParseException {
 		// Get a statement from the connection
-		String sql = "INSERT INTO PLAGEHORAIRE VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO PLAGEHORAIRE VALUES (?,sequence_plagehoraire.nextval,to_date(?,?),to_date(?,?),?)";
 		PreparedStatement preparedStatement = conn.prepareStatement(sql);
 		preparedStatement.setInt(1, numStation);
-		preparedStatement.setInt(2, numPlage);
-		preparedStatement.setDate(3, convertStringToDate(dateDebut));
-		preparedStatement.setDate(4, convertStringToDate(datePlage));
-		preparedStatement.setString(5, etatStation);
+		preparedStatement.setString(2, dateDebut);
+		preparedStatement.setString(3, "dd/MM/YYYY HH24:MI:SS");
+		preparedStatement.setString(4, dateFin);
+		preparedStatement.setString(5, "dd/MM/YYYY HH24:MI:SS");
+		preparedStatement.setString(6, etatStation);
 		preparedStatement.executeUpdate();
 		preparedStatement.close();
 		// conn.close();

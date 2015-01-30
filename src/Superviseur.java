@@ -16,7 +16,7 @@ public class Superviseur {
 			.println("Bonjour ! Bienvenue dans l'application VEPICK:"
 					+ "\n\nVeuillez choisir une option:"
 					+ "\n1: Consulter routines"
-					+ "\n2: Consulter vÃ©los"
+					+ "\n2: Consulter vélos"
 					+ "\n3: Consulter/Editer plages horaires"
 					+ "\n4: Consulter informations stations "
 					+ "\n5: Editer/Modifier routine routine" + "\n(0: Quitter)\n");
@@ -33,12 +33,12 @@ public class Superviseur {
 				System.out.flush();
 				RequetesBDSuperviseur.afficherRoutine(connexion1.getConn());
 				System.out.println("\n\nChoisir option:"
-						+ "\n1: DÃ©tailler routine"
+						+ "\n1: Détailler routine"
 						+ "\n2: Consulter avancement routine vehicule");
 				System.out.flush();
 				if (LectureClavier.lireChaine().equals("1")) {
 					System.out
-					.println("DÃ©tailler routine (saisir numero routine ou '0' pour terminer): ");
+					.println("Détailler routine (saisir numero routine ou '0' pour terminer): ");
 					System.out.flush();
 					int numRoutine = LectureClavier.lireEntier(saisie);
 					if (numRoutine != 0) {
@@ -101,7 +101,7 @@ public class Superviseur {
 				System.out.flush();
 				RequetesBDSuperviseur.afficherPlagesHoraires(connexion1.getConn());	
 				System.out.println("\n\n Choisir option:"
-						+ "\n1: CrÃ©er plage horaire"
+						+ "\n1: Créer plage horaire"
 						+ "\n2: Modifier plage horaire");
 				System.out.flush();
 				String choix3 = LectureClavier.lireChaine();
@@ -110,24 +110,21 @@ public class Superviseur {
 					.println("Numero de station ");
 					System.out.flush();
 					int numStation = LectureClavier.lireEntier(saisie);
-					System.out.println("Numero plage: ");
-					System.out.flush();
-					int numPlage = LectureClavier.lireEntier(saisie);
-					System.out.println("Date debut (JJ/MM/YYYY): ");
+					System.out.println("Date/heure debut (JJ/MM/YYYY HH:mm): ");
 					System.out.flush();
 					String dateDebut = LectureClavier.lireChaine();
-					System.out.println("Date fin (JJ/MM/YYYY): ");
+					System.out.println("Date/heure fin (JJ/MM/YYYY HH:mm): ");
 					System.out.flush();
 					String dateFin = LectureClavier.lireChaine();
 					System.out.println("Etat station: ");
 					System.out.flush();
 					String etatStation = LectureClavier.lireChaine();
-					RequetesBDSuperviseur.creerPlagehoraire(connexion1.getConn(), numStation, numPlage, dateDebut
-							, dateFin, etatStation);
+					RequetesBDSuperviseur.creerPlagehoraire(connexion1.getConn(), numStation, dateDebut+"00"
+							, dateFin+"00", etatStation);
 				}
 				if (choix3.equals("2")) {
 					System.out
-					.println("Plage horaire Ã  modifier (saisir numero plage horaire ou '0' pour terminer): ");
+					.println("Plage horaire à modifier (saisir numero plage horaire ou '0' pour terminer): ");
 					System.out.flush();
 					int numPlage = LectureClavier.lireEntier(saisie);
 					if (numPlage != 0) {
@@ -144,7 +141,7 @@ public class Superviseur {
 						System.out.println("Etat station: ");
 						System.out.flush();
 						String etatStation = LectureClavier.lireChaine();
-						RequetesBDSuperviseur.editerPlagehoraire(connexion1.getConn(),numPlage, numPlage, dateDebut, dateFin, etatStation);
+						RequetesBDSuperviseur.editerPlagehoraire(connexion1.getConn(),numPlage, numPlage, dateDebut+"00", dateFin+"00", etatStation);
 					}
 				}
 
@@ -181,16 +178,16 @@ public class Superviseur {
 				break;
 			case 5:
 				System.out.flush();
-				System.out.println("Veuillez sÃ©lectionner une option:\n"
-						+ "\n1: CrÃ©er une routine"
+				System.out.println("Veuillez sélectionner une option:\n"
+						+ "\n1: Créer une routine"
 						+ "\n2: Modifier une routine");
 				System.out.flush();
 				int saisie5 = LectureClavier.lireEntier(saisie);
 				if (saisie5 == 1) {
-					System.out.println("NumÃ©ro Superviseur: ");
+					System.out.println("Numéro Superviseur: ");
 					System.out.flush();
 					int numSuperviseur = LectureClavier.lireEntier(saisie);
-					System.out.println("Immatriculation vÃ©hicule: ");
+					System.out.println("Immatriculation véhicule: ");
 					System.out.flush();
 					int immatriculationVehicule = LectureClavier
 							.lireEntier(saisie);
@@ -203,10 +200,10 @@ public class Superviseur {
 
 				} else if (saisie5 == 2) {
 					System.out
-					.println("Veuillez saisir numÃ©ro de routine Ã  Ã©diter: ");
+					.println("Veuillez saisir numéro de routine à éditer: ");
 					System.out.flush();
 					int numRoutine = LectureClavier.lireEntier(saisie);
-					System.out.println("NumÃ©ro action: ");
+					System.out.println("Numéro action: ");
 					System.out.flush();
 					int numAction = LectureClavier.lireEntier(saisie);
 					System.out.println("Lieu Action: ");
